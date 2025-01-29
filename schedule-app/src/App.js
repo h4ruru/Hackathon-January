@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import './App.css';
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import MainPage from "./pages/MainPage";
+import DateRegisterPage from "./pages/DateRegisterPage";
+import FriendsPage from "./pages/FriendsPage";
 
 function App() {
+  const [user, setUser] = useState(null);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <p>飲み友アプリ</p>
       </header>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage setUser={setUser} />} />
+          <Route path="/register" element={<RegisterPage setUser={setUser} />} />
+          <Route path="/main" element={user ? <MainPage user={user} /> : <LoginPage setUser={setUser} />} />
+          <Route path="/date-register" element={<DateRegisterPage user={user} />} />
+          <Route path="/friends" element={<FriendsPage user={user} />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
