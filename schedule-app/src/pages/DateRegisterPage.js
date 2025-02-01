@@ -1,70 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebase";  // firebase.js から db をインポート
-import { doc, setDoc, getDoc } from "firebase/firestore";  // Firestore 関連のインポート
+import { updateSchedule, getSchedule } from "../auth/schedules";  // Firestore 関数のインポート
+import { useNavigate } from "react-router-dom";
 
 const DateRegisterPage = ({ user }) => {
-  const [date, setDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [events, setEvents] = useState([]);
+  const [selectedDates, setSelectedDates] = useState([]); // 自分の登録した日付
+  const navigate = useNavigate();
 
+  // 初期データの取得（自分のスケジュール）
   useEffect(() => {
-    if (user) {
-      // ユーザーがログインしている場合、そのユーザーの登録済み日程を取得する
-      const fetchEvents = async () => {
-          const userDocRef = doc(db, "users", user);
-          const userDocSnap = await getDoc(userDocRef);
+    const fetchSchedule = async () => {
+      const dates = await getSchedule(); // 自分のスケジュールを取得
+      setSelectedDates(dates);
+    };
+    fetchSchedule();
+  }, [user]);
 
-          if (userDocSnap.exists()) {
-            const userData = userDocSnap.data();
-            setEvents(userData.events || []);  // ユーザーのイベントリストを設定
-          }
-      };
-
-      fetchEvents();
-    }
-  }, [user]);  // user が変更される度に実行
-
-  const handleRegisterDate = async () => {
-    if (date.trim() && description.trim()) {
-        // 新しい日程を Firestore に追加
-        const userDocRef = doc(db, "users", user);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          const updatedEvents = [...userData.events, { date, description }];
-
-          // Firestore に日程リストを更新
-          await setDoc(userDocRef, { events: updatedEvents }, { merge: true });
-
-          setEvents(updatedEvents);  // ローカル状態にも日程リストを更新
-          setDate("");  // 入力フィールドをクリア
-          setDescription("");  // 入力フィールドをクリア
-        }
-    }
+  // カレンダーの日付クリック時の処理
+  const handleDateClick = async (date) => {
+    await updateSchedule(date); // Firestore に日程を登録または削除
+    setSelectedDates((prev) =>
+      prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date]
+    );
   };
 
   return (
     <div>
-      <h2>行ける日登録</h2>
-      {user && <p>Logged in as: {user}</p>}
-      <input 
-        type="date" 
-        value={date} 
-        onChange={(e) => setDate(e.target.value)} 
-      />
-      <input 
-        type="text" 
-        placeholder="Event Description" 
-        value={description} 
-        onChange={(e) => setDescription(e.target.value)} 
-      />
-      <button onClick={handleRegisterDate}>登録</button>
-      <ul>
-        {events.map((event, index) => (
-          <li key={index}>{event.date}: {event.description}</li>
-        ))}
-      </ul>
+      <h2>自分の可能な日を登録</h2>
+      <button onClick={() => navigate("/main")}>メインページへ戻る</button>
+      <div style={{ display: "flex", flexWrap: "wrap", maxWidth: 300 }}>
+        {[...Array(29)].map((_, i) => {
+          const day = i + 1;
+          const date = `2025-02-${day.toString().padStart(2, "0")}`;
+          const isSelected = selectedDates.includes(date);
+
+          return (
+            <button
+              key={date}
+              onClick={() => handleDateClick(date)}
+              style={{
+                margin: 5,
+                backgroundColor: isSelected ? "blue" : "gray", // 選択された日付の色
+                width: 40,
+                height: 40,
+                color: "white",
+                borderRadius: "5px",
+              }}
+            >
+              {day}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };

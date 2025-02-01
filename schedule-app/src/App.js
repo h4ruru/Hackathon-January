@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 import './App.css';
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import MainPage from "./pages/MainPage";
-import DateRegisterPage from "./pages/DateRegisterPage";
-import FriendsPage from "./pages/FriendsPage";
+import MainPage from "./pages/MainPage"; // メインカレンダーページ
+import FriendsPage from "./pages/FriendsPage"; // フレンドページ
+import DateRegisterPage from "./pages/DateRegisterPage"; // 登録ページ
 import { auth } from "./firebase";  // Firebase 認証をインポート
 
 function App() {
@@ -27,15 +27,15 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>飲み友アプリ</p>
+        <p>日程調整アプリ</p>
       </header>
       <Router>
         <Routes>
           <Route path="/" element={user ? <Navigate to="/main" /> : <LoginPage setUser={setUser} />} />
           <Route path="/register" element={user ? <Navigate to="/main" /> : <RegisterPage setUser={setUser} />} />
-          <Route path="/main" element={user ? <MainPage user={user} /> : <Navigate to="/" />} />
-          <Route path="/date-register" element={user ? <DateRegisterPage user={user} /> : <Navigate to="/" />} />
-          <Route path="/friends" element={user ? <FriendsPage user={user} /> : <Navigate to="/" />} />
+          <Route path="/main" element={user ? <MainPage user={user} /> : <Navigate to="/" />} /> {/* メインページ */}
+          <Route path="/friends" element={user ? <FriendsPage/> : <Navigate to="/" />} /> {/* フレンドページ */}
+          <Route path="/date-register" element={user ? <DateRegisterPage user={user} /> : <Navigate to="/" />} /> {/* 登録ページ */}
         </Routes>
       </Router>
     </div>

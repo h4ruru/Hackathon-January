@@ -1,36 +1,46 @@
-import { db } from "../firebase";  // firebase.js から db をインポート
-import { collection, getDoc, setDoc, updateDoc, getDocs, arrayUnion, arrayRemove, doc } from "firebase/firestore";  // Firestore 関数をインポート
+import { doc, setDoc, getDoc, getDocs, collection} from "firebase/firestore";
+import { auth, db } from "../firebase";  // Firebaseの設定
 
-// 日程を登録する
-export const addSchedule = async (date, userId) => {
-  const scheduleRef = doc(db, "schedules", date);
-  const docSnap = await getDoc(scheduleRef);
+// 現在のユーザーのスケジュールを取得
+export const getSchedule = async () => {
+  const user = auth.currentUser;
+  if (!user) return [];
 
-  if (docSnap.exists()) {
-    await updateDoc(scheduleRef, {
-      users: arrayUnion(userId),
-    });
-  } else {
-    await setDoc(scheduleRef, { users: [userId] });
+  const userRef = doc(db, "schedules", user.uid);
+  const userDoc = await getDoc(userRef);
+  if (userDoc.exists()) {
+    return userDoc.data().availableDates || [];
   }
+  return [];
 };
 
-// 日程を削除する
-export const removeSchedule = async (date, userId) => {
-  const scheduleRef = doc(db, "schedules", date);
-  await updateDoc(scheduleRef, {
-    users: arrayRemove(userId),
-  });
+// 現在のユーザーのスケジュールを更新（登録または削除）
+export const updateSchedule = async (date) => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const userRef = doc(db, "schedules", user.uid);
+  const userDoc = await getDoc(userRef);
+
+  let availableDates = userDoc.exists() ? userDoc.data().availableDates || [] : [];
+  
+  if (availableDates.includes(date)) {
+    availableDates = availableDates.filter((d) => d !== date); // 既に登録されていれば削除
+  } else {
+    availableDates.push(date); // 新たに追加
+  }
+
+  await setDoc(userRef, { availableDates });
 };
 
-// 全日程を取得する
-export const getSchedules = async () => {
-  const querySnapshot = await getDocs(collection(db, "schedules"));  // Firestore から全日程を取得
-  let schedules = {};
+export const getAllSchedules = async () => {
+  const schedulesRef = collection(db, "schedules");
+  const snapshot = await getDocs(schedulesRef);
+  const allSchedules = [];
 
-  querySnapshot.forEach(doc => {
-    schedules[doc.id] = doc.data().users;
+  snapshot.forEach((doc) => {
+    allSchedules.push(doc.data().availableDates || []);
   });
 
-  return schedules;
+  return allSchedules;
 };

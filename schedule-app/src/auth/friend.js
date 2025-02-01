@@ -1,22 +1,31 @@
 import { db } from "../firebase";
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, setDoc, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 // フレンド申請を送る
 export const sendFriendRequest = async (userId, friendId) => {
-  await addDoc(collection(db, "friends"), {
-    userId: userId,
-    friendId: friendId,
-    status: "pending",
+  // users/{userId}/friends/{friendId} というサブコレクションのドキュメントを作成
+  const friendDocRef = doc(db, "users", userId, "friends", friendId);
+
+  // ドキュメントの作成 (status を "pending" に設定)
+  await setDoc(friendDocRef, {
+    status: "pending",  // 申請中
     createdAt: new Date(),
   });
 };
 
-// フレンド一覧を取得
+
+// ユーザーのフレンドを取得
 export const getFriends = async (userId) => {
-  const q = query(collection(db, "friends"), where("userId", "==", userId), where("status", "==", "accepted"));
+  // フレンドのステータスが "accepted" のものを取得
+  const q = query(
+    collection(db, "users", userId, "friends"), // users/{userId}/friends サブコレクション
+    where("status", "==", "accepted")  // 申請が承認されたフレンド
+  );
+  
   const querySnapshot = await getDocs(q);
 
-  return querySnapshot.docs.map(doc => doc.data().friendId);
+  // フレンドのIDをリストとして返す
+  return querySnapshot.docs.map(doc => doc.id);
 };
 
 // フレンドを削除
