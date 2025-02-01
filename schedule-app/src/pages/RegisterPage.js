@@ -1,46 +1,47 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";  // firebase.js から auth をインポート
 import { useNavigate } from "react-router-dom";
+import { signUp } from "../auth/signUp";
 
-const RegisterPage = ({ setUser }) => {
+const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-
-      // Firebase での新規ユーザー作成
-      await createUserWithEmailAndPassword(auth, email, password);
-      setUser(email);  // ユーザーの情報をセット
-      navigate("/main");  // メインページに遷移
+      await signUp(email, password, username);
+      alert("登録が完了しました。");
   };
 
   return (
     <div>
-      <h2>登録</h2>
-      <form onSubmit={handleRegister}>
-        <div>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Choose a password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+      <h2>新規登録</h2>
+      <form onSubmit={handleSignUp}>
+        <input
+          type="text"
+          placeholder="ユーザー名"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <input
+          type="email"
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">登録</button>
       </form>
+      <button onClick={() => navigate("/")}>ログイン</button>
     </div>
   );
 };

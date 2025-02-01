@@ -1,46 +1,43 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { signIn } from "../auth/signIn"; 
 
-const LoginPage = ({ setUser }) => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await signInWithEmailAndPassword(auth, email, password);
-    setUser(email);  // ログイン成功時にユーザー情報を保存
-    navigate("/main");  // メインページに遷移
+      await signIn(email, password);
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>ログイン</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleLogin}>
-        <div>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
+        <input
+          type="email"
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">ログイン</button>
       </form>
+      <button onClick={() => navigate("/register")}>新規登録</button>
     </div>
   );
 };
+
 
 export default LoginPage;
