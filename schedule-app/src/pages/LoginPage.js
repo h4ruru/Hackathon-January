@@ -1,27 +1,44 @@
 import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = ({ setUser }) => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (username.trim()) {
-      setUser(username);
-      navigate("/main");
-    }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    await signInWithEmailAndPassword(auth, email, password);
+    setUser(email);  // ログイン成功時にユーザー情報を保存
+    navigate("/main");  // メインページに遷移
   };
 
   return (
     <div>
       <h2>Login</h2>
-      <input 
-        type="text" 
-        placeholder="Enter your name" 
-        value={username} 
-        onChange={(e) => setUsername(e.target.value)} 
-      />
-      <button onClick={handleLogin}>Login</button>
+      <form onSubmit={handleLogin}>
+        <div>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 };
