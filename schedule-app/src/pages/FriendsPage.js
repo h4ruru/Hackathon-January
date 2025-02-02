@@ -1,5 +1,6 @@
 import React, {/*{ useState, useEffect }*/} from "react";
 import { useNavigate } from "react-router-dom";
+import './css/FriendsPage.css';
 // import { db } from "../firebase";  // firebase.js から db をインポート
 // import { doc, setDoc, getDocs, query, where, collection, updateDoc } from "firebase/firestore";  // Firestore 関連のインポート
 

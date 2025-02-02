@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { updateSchedule, getSchedule } from "../auth/schedules";  // Firestore 関数のインポート
 import { useNavigate } from "react-router-dom";
+import "./css/DateRegisterPage.css";
 
 const DateRegisterPage = ({ user }) => {
   const [selectedDates, setSelectedDates] = useState([]); // 自分の登録した日付
