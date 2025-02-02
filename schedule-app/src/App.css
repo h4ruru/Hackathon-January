@@ -1,0 +1,16 @@
+.App-header {
+    display: flex;
+    align-items: center;  /* 垂直方向に中央揃え */
+    justify-content: flex-start;  /* 水平方向に左寄せ */
+    padding: 20px;
+  }
+  
+  .App-header div {
+    display: flex;
+    align-items: center; /* 画像とテキストを横並びに */
+  }
+  
+  .App-header img {
+    margin-right: 10px; /* 画像とテキストの間に余白を追加 */
+  }
+  

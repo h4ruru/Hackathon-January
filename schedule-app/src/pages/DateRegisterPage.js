@@ -28,7 +28,7 @@ const DateRegisterPage = ({ user }) => {
     <div>
       <h2>自分の可能な日を登録</h2>
       <button onClick={() => navigate("/main")}>メインページへ戻る</button>
-      <div style={{ display: "flex", flexWrap: "wrap", maxWidth: 300 }}>
+      <div className="calendar-container" style={{ display: "flex", flexWrap: "wrap", maxWidth: 300 }}>
         {[...Array(29)].map((_, i) => {
           const day = i + 1;
           const date = `2025-02-${day.toString().padStart(2, "0")}`;
@@ -36,6 +36,7 @@ const DateRegisterPage = ({ user }) => {
 
           return (
             <button
+              className="calender"
               key={date}
               onClick={() => handleDateClick(date)}
               style={{
