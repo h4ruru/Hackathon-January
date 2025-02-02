@@ -35,9 +35,11 @@ const MainPage = ({ user }) => {
     // 登録した人数を計算
     const registeredByOthers = allSchedules.filter((dates) => dates.includes(date)).length;
 
-    if (registeredByOthers >= 3) return "gold"; // 3人以上で金色
-    if (registeredByOthers === 2) return "red"; // 2人で赤色
-    if (registeredByOthers === 1) return "blue"; // 1人で青色
+    if (registeredByOthers >= 5) return "gold"; // 3人以上で金色
+    if (registeredByOthers === 4) return "red"; // 3人以上で金色
+    if (registeredByOthers === 3) return "orange"; // 3人以上で金色
+    if (registeredByOthers === 2) return "blue"; // 2人で赤色
+    if (registeredByOthers === 1) return "gray"; // 1人で青色
     return "white"; // 登録がない場合は白色
   };
 
@@ -77,6 +79,67 @@ const MainPage = ({ user }) => {
             </div>
           );
         })}
+      </div>
+      <p>
+      色の意味:
+      <br />
+      <span style={{ 
+        backgroundColor: "gold", 
+        color: "white", 
+        padding: "5px", 
+        margin: "3px", 
+        display: "inline-block", 
+        borderRadius: "5px"
+      }}>
+        　　
+      </span>: 五人以上の登録
+      <br />
+      <span style={{ 
+        backgroundColor: "red", 
+        color: "white", 
+        padding: "5px", 
+        margin: "3px", 
+        display: "inline-block", 
+        borderRadius: "5px"
+      }}>
+        　　
+      </span>: 四人の登録
+      <br />
+      <span style={{ 
+        backgroundColor: "orange", 
+        color: "white", 
+        padding: "5px", 
+        margin: "3px", 
+        display: "inline-block", 
+        borderRadius: "5px"
+      }}>
+        　　
+      </span>: 三人の登録
+      <br />
+      <span style={{ 
+        backgroundColor: "blue", 
+        color: "white", 
+        padding: "5px", 
+        margin: "3px", 
+        display: "inline-block", 
+        borderRadius: "5px"
+      }}>
+        　　
+      </span>: 二人の登録
+      <br />
+      <span style={{ 
+        backgroundColor: "gray", 
+        color: "white", 
+        padding: "5px", 
+        margin: "3px", 
+        display: "inline-block", 
+        borderRadius: "5px"
+      }}>
+        　　
+      </span>: 一人の登録
+    </p>
+      <div>
+        <p></p>
       </div>
     </div>
   );
