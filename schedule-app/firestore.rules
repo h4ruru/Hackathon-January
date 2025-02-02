@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ユーザーの個別スケジュールデータに対するアクセス
+    match /schedules/{userId} {
+      // 自分のデータには、読み取り・書き込みができる
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // 他のユーザーのデータには、読み取りのみできる
+      allow read: if request.auth != null;
+      allow write: if false; // 書き込みはできない
+    }
+
+    // その他のドキュメントはすべて読み取り専用
+    match /{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}
+
+
+
+
+
+
+
+
