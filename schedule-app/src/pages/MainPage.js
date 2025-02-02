@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
-import { getSchedule, getAllSchedules } from "../auth/schedules"; // 修正したFirestore関数をインポート
+import { getSchedule, getAllSchedules } from "../auth/schedules";
+import './css/MainPage.css';
 
 const MainPage = ({ user }) => {
   const [selectedDates, setSelectedDates] = useState([]); // 自分の登録した日付
@@ -51,7 +52,7 @@ const MainPage = ({ user }) => {
         <button onClick={() => navigate("/friends")}>友達リスト</button>
         <button onClick={handleLogout}>ログアウト</button>
       </div>
-      <div>
+      <div className="calendar-container">
         {[...Array(29)].map((_, i) => {
           const day = i + 1;
           const date = `2025-02-${day.toString().padStart(2, "0")}`;
@@ -59,22 +60,16 @@ const MainPage = ({ user }) => {
           const isSelected = selectedDates.includes(date); // 自分が選択した日付かどうか
 
           return (
-            <div key={date} style={{ display: "inline-block", margin: 5 }}>
-              <button
+            <div key={date}>
+              <button 
+                className="calender"
                 style={{
                   backgroundColor: color,
-                  width: 40,
-                  height: 40,
-                  position: "relative",
-                  color: color === "white" ? "black" : "white", // 色に応じて文字色変更
+                  color: color === "white" ? "black" : "white",
                 }}
               >
                 {day}
-                {isSelected && (
-                  <span style={{ position: "absolute", bottom: 0, right: 0, fontSize: "12px" }}>
-                    ⭐
-                  </span>
-                )}
+                {isSelected && <span className="star">⭐</span>}
               </button>
             </div>
           );
