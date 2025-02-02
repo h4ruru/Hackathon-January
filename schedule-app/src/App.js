@@ -7,6 +7,7 @@ import MainPage from "./pages/MainPage"; // メインカレンダーページ
 import FriendsPage from "./pages/FriendsPage"; // フレンドページ
 import DateRegisterPage from "./pages/DateRegisterPage"; // 登録ページ
 import { auth } from "./firebase";  // Firebase 認証をインポート
+import Logo from './images/Logo.png';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -27,7 +28,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>日程調整アプリ</p>
+        <div>
+        <img src={Logo} alt="Logo" style={{ width: '150px', height: 'auto' }} />
+         <p>日程調整アプリ</p> 
+        </div>
       </header>
       <Router>
         <Routes>
