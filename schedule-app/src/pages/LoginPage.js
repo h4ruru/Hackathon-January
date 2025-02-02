@@ -10,6 +10,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
       await signIn(email, password);
+      navigate("/main"); 
   };
 
   return (
