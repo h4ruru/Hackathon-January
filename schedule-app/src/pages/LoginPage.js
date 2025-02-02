@@ -5,7 +5,6 @@ import { signIn } from "../auth/signIn";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -16,7 +15,6 @@ const LoginPage = () => {
   return (
     <div>
       <h2>ログイン</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleLogin}>
         <input
           type="email"
